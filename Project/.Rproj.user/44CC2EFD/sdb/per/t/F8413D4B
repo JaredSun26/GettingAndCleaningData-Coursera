@@ -1,0 +1,16 @@
+{
+    "contents" : "#----------------------------------------------------\n#                   download dataset                |\n#----------------------------------------------------\ndownload.file(\"https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip\",destfile=\"mobile.zip\")\nunzip(\"mobile.zip\")\n\n#-------------------------------\n#1.Merge training and test sets|\n#-------------------------------\ntrainSet<- read.table(\"./UCI HAR Dataset/train/X_train.txt\")\ntrainLabel <- read.table(\"./UCI HAR Dataset/train/y_train.txt\")\ntrainSubject <- read.table(\"./UCI HAR Dataset/train/subject_train.txt\")\n\ntestSet <- read.table(\"./UCI HAR Dataset/test/X_test.txt\")\ntestLabel <- read.table(\"./UCI HAR Dataset/test/y_test.txt\") \ntestSubject <- read.table(\"./UCI HAR Dataset/test/subject_test.txt\")\n\ncombinedSet <- rbind(trainSet, testSet)\ncombinedLabel <- rbind(trainLabel, testLabel)\ncombinedSubject <- rbind(trainSubject, testSubject)\n\n#-------------------------------------------------------------------------------\n#2.Extracts only the measurements on mean and sd deviation for each measurement| \n#-------------------------------------------------------------------------------\n\nfeatures <- read.table(\"./UCI HAR Dataset/features.txt\")\nind_MeanStd=grep(pattern=\"mean\\\\(\\\\)|std\\\\(\\\\)\",features[,2])\n\ncombinedSet<-combinedSet[,ind_MeanStd]\nnames(combinedSet)<-features[ind_MeanStd,2]\n\n#-------------------------------------------------------------------------\n#3.Uses descriptive activity names to name the activities in the data set|\n#-------------------------------------------------------------------------\n\nact<- read.table(\"./UCI HAR Dataset/activity_labels.txt\",stringsAsFactors=FALSE)\ncombinedLabel[, 1] <- act[combinedLabel[,1],2]\nnames(combinedLabel) <- \"activity\"\n\n#--------------------------------------------------------------------\n#4.Appropriately labels the data set with descriptive variable names|\n#--------------------------------------------------------------------\n\nnames(combinedSubject) <- \"subject\"\ntidy <- cbind(combinedSubject, combinedLabel, combinedSet)\nwrite.table(tidy, \"tidy_data.txt\", row.name=FALSE)\n#--------------------------------------------------------------------------\n#5. creates a second, independent tidy data set with the average          |\n#   of each variable for each activity and each subject.                  |\n#--------------------------------------------------------------------------\n\ntidyWithMean<-with(tidy,\n            aggregate(tidy[,c(3:68)],\n            by=list(subject=subject,activity=activity), \n            FUN=mean))\nwrite.table(tidyWithMean, \"tidy_with_mean.txt\", row.name=FALSE)\n",
+    "created" : 1429937388837.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1269677034",
+    "id" : "F8413D4B",
+    "lastKnownWriteTime" : 1430030353,
+    "path" : "E:/SkyDrive/Courses achive/GettingAndCleaningData-Coursera/Project/run_analysis.R",
+    "project_path" : "run_analysis.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
