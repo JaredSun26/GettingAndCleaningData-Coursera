@@ -23,7 +23,8 @@ download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv ",
 download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv","edu.csv")
 
 gross<-read.csv("gross.csv",header=F,skip=5, nrow=190, 
-                colClasses=c(NA,NA,'NULL',NA,'numeric','NULL','NULL','NULL','NULL','NULL'))
+                colClasses=c(NA,NA,"NULL",NA,NA,"NULL","NULL","NULL","NULL","NULL"))
+gross$V5<-as.numeric(gsub(",","",gross$V5))
 edu<-read.csv("edu.csv")
 
 result<-merge(gross,edu,by.x="V1", by.y="CountryCode", all= FALSE)
